@@ -10,6 +10,6 @@ const (
 )
 
 var (
-	ErrEmailAlreadyRegistered    error = errors.New(emailAlreadyRegisteredErrorMessage)
-	ErrUsernameAlreadyRegistered error = errors.New(usernameAlreadyRegisteredErrorMessage)
+	ErrEmailAlreadyRegistered    = errors.New(emailAlreadyRegisteredErrorMessage)
+	ErrUsernameAlreadyRegistered = errors.New(usernameAlreadyRegisteredErrorMessage)
 )

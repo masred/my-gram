@@ -37,7 +37,7 @@ func (userService *UserService) Register(req request.UserRegister) (res response
 		Age:      req.Age,
 	}
 
-	if err = userService.UserRepository.Register(user); err != nil {
+	if err = userService.UserRepository.Register(&user); err != nil {
 		return
 	}
 
@@ -51,14 +51,34 @@ func (userService *UserService) Register(req request.UserRegister) (res response
 	return
 }
 
-func (userService *UserService) Login(payload request.UserLogin) (response.UserLogin, error) {
+func (userService *UserService) Login(req request.UserLogin) (res response.UserLogin, err error) {
+	if err = userService.Validate.Struct(req); err != nil {
+		return
+	}
+
+	user := entity.User{
+		Email:    req.Email,
+		Password: []byte(req.Password),
+	}
+
+	if err = userService.UserRepository.Login(&user); err != nil {
+		return
+	}
+
+	jwtService := helper.NewUserJWTService([]byte("tes"))
+	tokenResponse, err := jwtService.GenerateUserToken(user.ID, user.Username, user.Email)
+
+	res = response.UserLogin{
+		Token: tokenResponse,
+	}
+
+	return
+}
+
+func (userService *UserService) Update(id uuid.UUID, req request.UserUpdate) (response.UserUpdate, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (userService *UserService) Update(id string, payload request.UserUpdate) (response.UserUpdate, error) {
-	panic("not implemented") // TODO: Implement
-}
-
-func (userService *UserService) Delete(id string) (response.UserDelete, error) {
+func (userService *UserService) Delete(id uuid.UUID) (response.UserDelete, error) {
 	panic("not implemented") // TODO: Implement
 }

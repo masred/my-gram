@@ -24,14 +24,14 @@ type (
 	UserService interface {
 		Register(payload request.UserRegister) (response.UserRegister, error)
 		Login(payload request.UserLogin) (response.UserLogin, error)
-		Update(id string, payload request.UserUpdate) (response.UserUpdate, error)
-		Delete(id string) (response.UserDelete, error)
+		Update(id uuid.UUID, payload request.UserUpdate) (response.UserUpdate, error)
+		Delete(id uuid.UUID) (response.UserDelete, error)
 	}
 
 	UserRepository interface {
-		Register(user User) error
-		Login(user User) error
-		Update(id string, payload request.UserUpdate) error
-		Delete(id string) error
+		Register(user *User) error
+		Login(user *User) error
+		Update(id uuid.UUID, payload request.UserUpdate) error
+		Delete(id uuid.UUID) error
 	}
 )
