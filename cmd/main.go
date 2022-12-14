@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-playground/validator/v10"
 	"github.com/masred/my-gram/app/controller/http/api"
+	"github.com/masred/my-gram/app/helper"
 	"github.com/masred/my-gram/app/repository"
 	"github.com/masred/my-gram/app/service"
 	"github.com/masred/my-gram/config"
@@ -16,14 +17,21 @@ import (
 
 func main() {
 	config.New()
+
+	secretKey := os.Getenv("JWT_SECRET_KEY")
+	if secretKey == "" {
+		secretKey = "ez"
+	}
+
 	validate := validator.New()
+	jwtService := helper.NewUserJWTService([]byte(secretKey))
 	db, err := config.NewPostgresDatabase()
 	if err != nil {
 		panic(err)
 	}
 
 	userRepository := repository.NewUserRepository(db)
-	userService := service.NewUserService(userRepository, validate)
+	userService := service.NewUserService(userRepository, validate, jwtService)
 	userController := api.NewUserController(&userService)
 
 	host := os.Getenv("SERVER_HOST")

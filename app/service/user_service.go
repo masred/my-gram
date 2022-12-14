@@ -12,10 +12,11 @@ import (
 type UserService struct {
 	UserRepository entity.UserRepository
 	Validate       *validator.Validate
+	UserJWTService *helper.UserJWTService
 }
 
-func NewUserService(userRepository entity.UserRepository, validate *validator.Validate) entity.UserService {
-	return &UserService{UserRepository: userRepository, Validate: validate}
+func NewUserService(userRepository entity.UserRepository, validate *validator.Validate, userJWTService *helper.UserJWTService) entity.UserService {
+	return &UserService{UserRepository: userRepository, Validate: validate, UserJWTService: userJWTService}
 }
 
 func (userService *UserService) Register(req request.UserRegister) (res response.UserRegister, err error) {
@@ -65,8 +66,7 @@ func (userService *UserService) Login(req request.UserLogin) (res response.UserL
 		return
 	}
 
-	jwtService := helper.NewUserJWTService([]byte("tes"))
-	tokenResponse, err := jwtService.GenerateUserToken(user.ID, user.Username, user.Email)
+	tokenResponse, err := userService.UserJWTService.GenerateUserToken(user.ID, user.Username, user.Email)
 
 	res = response.UserLogin{
 		Token: tokenResponse,
