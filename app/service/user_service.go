@@ -75,10 +75,40 @@ func (userService *UserService) Login(req request.UserLogin) (res response.UserL
 	return
 }
 
-func (userService *UserService) Update(id uuid.UUID, req request.UserUpdate) (response.UserUpdate, error) {
-	panic("not implemented") // TODO: Implement
+func (userService *UserService) Update(id uuid.UUID, req request.UserUpdate) (res response.UserUpdate, err error) {
+	if err = userService.Validate.Struct(req); err != nil {
+		return
+	}
+
+	user := entity.User{
+		ID:       id,
+		Username: req.Username,
+		Email:    req.Email,
+	}
+
+	if err = userService.UserRepository.Update(&user); err != nil {
+		return
+	}
+
+	res = response.UserUpdate{
+		ID:        user.ID,
+		Username:  user.Username,
+		Email:     user.Email,
+		Age:       user.Age,
+		UpdatedAt: user.UpdatedAt,
+	}
+
+	return
 }
 
-func (userService *UserService) Delete(id uuid.UUID) (response.UserDelete, error) {
-	panic("not implemented") // TODO: Implement
+func (userService *UserService) Delete(id uuid.UUID) (res response.UserDelete, err error) {
+	if err = userService.UserRepository.Delete(id); err != nil {
+		return
+	}
+
+	res = response.UserDelete{
+		Message: "user successfully deleted",
+	}
+
+	return
 }

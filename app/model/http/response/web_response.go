@@ -10,6 +10,6 @@ type (
 	}
 
 	Message struct {
-		Message string `json:"message"`
+		Message interface{} `json:"message"`
 	}
 )

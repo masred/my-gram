@@ -5,7 +5,6 @@ import (
 	"github.com/masred/my-gram/app/exception"
 	"github.com/masred/my-gram/app/helper"
 	"github.com/masred/my-gram/app/model/entity"
-	"github.com/masred/my-gram/app/model/http/request"
 	"gorm.io/gorm"
 )
 
@@ -39,10 +38,33 @@ func (userRepository *UserRepository) Login(user *entity.User) (err error) {
 	return
 }
 
-func (userRepository *UserRepository) Update(id uuid.UUID, payload request.UserUpdate) error {
-	panic("not implemented") // TODO: Implement
+func (userRepository *UserRepository) Update(user *entity.User) (err error) {
+	newUser := entity.User{
+		Username: user.Username,
+		Email:    user.Email,
+	}
+
+	if err = userRepository.Database.First(&user, user.ID).Error; err != nil {
+		return
+	}
+
+	if err = userRepository.Database.Model(&user).Updates(newUser).Error; err != nil {
+		return
+	}
+
+	return
 }
 
-func (userRepository *UserRepository) Delete(id uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+func (userRepository *UserRepository) Delete(id uuid.UUID) (err error) {
+	var user entity.User
+
+	if err = userRepository.Database.First(&user, id).Error; err != nil {
+		return
+	}
+
+	if err = userRepository.Database.Delete(&user).Error; err != nil {
+		return
+	}
+
+	return
 }

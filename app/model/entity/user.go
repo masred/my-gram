@@ -22,16 +22,16 @@ type (
 	}
 
 	UserService interface {
-		Register(payload request.UserRegister) (response.UserRegister, error)
-		Login(payload request.UserLogin) (response.UserLogin, error)
-		Update(id uuid.UUID, payload request.UserUpdate) (response.UserUpdate, error)
-		Delete(id uuid.UUID) (response.UserDelete, error)
+		Register(payload request.UserRegister) (res response.UserRegister, err error)
+		Login(payload request.UserLogin) (res response.UserLogin, err error)
+		Update(id uuid.UUID, payload request.UserUpdate) (res response.UserUpdate, err error)
+		Delete(id uuid.UUID) (res response.UserDelete, err error)
 	}
 
 	UserRepository interface {
-		Register(user *User) error
-		Login(user *User) error
-		Update(id uuid.UUID, payload request.UserUpdate) error
-		Delete(id uuid.UUID) error
+		Register(user *User) (err error)
+		Login(user *User) (err error)
+		Update(user *User) (err error)
+		Delete(id uuid.UUID) (err error)
 	}
 )
