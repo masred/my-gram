@@ -32,7 +32,11 @@ func main() {
 
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository, validate, jwtService)
-	userController := api.NewUserController(&userService)
+	userController := api.NewUserController(userService)
+
+	photoRepository := repository.NewPhotoRepository(db)
+	photoService := service.NewPhotoService(photoRepository, validate)
+	photoController := api.NewPhotoController(photoService)
 
 	host := os.Getenv("SERVER_HOST")
 	if host == "" {
@@ -47,6 +51,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	userController.Route(r)
+	photoController.Route(r)
 
 	fmt.Println("Server started at " + host + ":" + port)
 	http.ListenAndServe(host+":"+port, r)
