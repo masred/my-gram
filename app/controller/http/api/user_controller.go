@@ -20,21 +20,19 @@ type UserController struct {
 	UserService entity.UserService
 }
 
-func NewUserController(userService *entity.UserService) UserController {
-	return UserController{UserService: *userService}
+func NewUserController(userService entity.UserService) UserController {
+	return UserController{UserService: userService}
 }
 
 func (userController *UserController) Route(r chi.Router) {
-	r.Route("/v1", func(r chi.Router) {
-		r.Route("/users", func(r chi.Router) {
-			r.Post("/register", userController.Register)
-			r.Post("/login", userController.Login)
+	r.Route("/users", func(r chi.Router) {
+		r.Post("/register", userController.Register)
+		r.Post("/login", userController.Login)
 
-			r.Group(func(r chi.Router) {
-				r.Use(middleware.AuthMiddleware)
-				r.Put("/", userController.Update)
-				r.Delete("/", userController.Delete)
-			})
+		r.Group(func(r chi.Router) {
+			r.Use(middleware.AuthMiddleware)
+			r.Put("/", userController.Update)
+			r.Delete("/", userController.Delete)
 		})
 	})
 }
