@@ -11,9 +11,8 @@ type (
 	}
 
 	PhotoUpdate struct {
-		Title    string    `validate:"required" json:"title"`
-		Caption  string    `json:"caption"`
-		PhotoUrl string    `validate:"required" json:"photo_url"`
-		UserID   uuid.UUID `json:"user_id"`
+		Title    string `validate:"required" json:"title"`
+		Caption  string `json:"caption"`
+		PhotoUrl string `validate:"required" json:"photo_url"`
 	}
 )
